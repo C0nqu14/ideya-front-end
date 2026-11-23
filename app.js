@@ -236,15 +236,23 @@ function fecharModalIA() {
 // Alternar Lista/Mapa no Telemóvel
 function alternarMapaMobile() {
     const lista = document.getElementById('lista-container');
-    const mapa = document.getElementById('map');
-    if (!lista || !mapa) return;
+    const mapaContainer = document.getElementById('mapa-container');
+    const botao = document.getElementById('btn-toggle-mapa');
+    const textoBotao = botao ? botao.querySelector('span') : null;
+    if (!lista || !mapaContainer) return;
 
     mapaVisivelMobile = !mapaVisivelMobile;
     lista.classList.toggle('hidden', mapaVisivelMobile);
-    mapa.classList.toggle('hidden', !mapaVisivelMobile);
+    mapaContainer.classList.toggle('hidden', !mapaVisivelMobile);
+
+    if (botao) botao.setAttribute('aria-pressed', String(mapaVisivelMobile));
+    if (textoBotao) textoBotao.textContent = mapaVisivelMobile ? 'Ver Lista' : 'Ver no Mapa';
 
     if (mapaVisivelMobile && map) {
-        setTimeout(() => map.invalidateSize(), 0);
+        requestAnimationFrame(() => {
+            map.invalidateSize();
+            map.setView(map.getCenter(), map.getZoom(), { animate: false });
+        });
     }
 }
 

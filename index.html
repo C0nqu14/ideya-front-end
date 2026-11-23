@@ -126,11 +126,11 @@ tailwind.config = { theme: { extend: {
     <div id="grid-locais" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
   </section>
 
-  <section id="mapa-container" class="hidden lg:block lg:w-1/2 xl:w-[45%] h-full relative border-l border-slate-200">
+  <section id="mapa-container" class="hidden lg:block w-full lg:w-1/2 xl:w-[45%] h-full relative border-l border-slate-200">
     <div id="map" class="w-full h-full z-10"></div>
   </section>
 
-  <button onclick="alternarMapaMobile()" id="btn-toggle-mapa" class="lg:hidden fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-30 bg-slateDark text-white font-semibold text-sm px-5 py-3 rounded-full shadow-xl flex items-center gap-2 active:scale-95 cursor-pointer">
+  <button onclick="alternarMapaMobile()" id="btn-toggle-mapa" class="lg:hidden fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-30 bg-slateDark text-white font-semibold text-sm px-5 py-3 rounded-full shadow-xl flex items-center gap-2 active:scale-95 cursor-pointer" aria-controls="mapa-container" aria-pressed="false">
     <i data-lucide="map" class="w-4 h-4"></i> <span>Ver no Mapa</span>
   </button>
 </main>
