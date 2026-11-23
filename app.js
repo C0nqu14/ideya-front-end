@@ -114,6 +114,7 @@ function renderizarLocais(locais, valorPorPessoa, iniciadoPeloUtilizador = false
         // Criar Cartão HTML
         const card = document.createElement('article');
         card.className = 'bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-md transition group cursor-pointer flex flex-col';
+        card.dataset.descricao = local.descricao || '';
         card.innerHTML = `
             <div class="relative h-44 overflow-hidden bg-slate-100">
                 <img src="${fotoUrl}" alt="${local.nome}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">

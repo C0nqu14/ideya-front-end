@@ -253,9 +253,9 @@ tailwind.config = { theme: { extend: {
       if (achado) return achado;
     }
     var ps = Array.prototype.slice.call(card.querySelectorAll('p,span,div')).filter(function(e){ return !e.children.length && e.textContent.trim(); });
-    var desc = ps.map(function(e){ return e.textContent.trim(); })
-                 .filter(function(t){ return t !== nome && !/Kz/i.test(t); })
-                 .sort(function(a,b){ return b.length - a.length; })[0];
+    var desc = card.dataset.descricao || ps.map(function(e){ return e.textContent.trim(); })
+                                              .filter(function(t){ return t !== nome && !/Kz/i.test(t); })
+                                              .sort(function(a,b){ return b.length - a.length; })[0];
     var preco = ps.map(function(e){ return e.textContent.trim(); }).find(function(t){ return /Kz/i.test(t); });
     var img = card.querySelector('img');
     return { nome: nome, descricao: desc, preco: preco, foto: img ? img.getAttribute('src') : '' };
