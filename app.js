@@ -4,13 +4,17 @@ let categoriaAtual = null;
 let map = null;
 let markersLayer = null;
 let mapaVisivelMobile = false;
+let contextoAudio = null;
 
 // Inicializar Ícones e Mapa ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
     inicializarMapa();
     atualizarCalculoLocal();
-    buscarIdeyas();
+    buscarIdeyas(false);
+
+    document.addEventListener('pointerdown', prepararAudioOrcamento, { once: true });
+    document.addEventListener('keydown', prepararAudioOrcamento, { once: true });
 });
 
 // 1. Configurar Mapa Leaflet centrado em Luanda
@@ -53,7 +57,7 @@ function selecionarCategoria(categoria, elementoBtn) {
 }
 
 // 4. Comunicar com POST /criar-ideya da FastAPI
-async function buscarIdeyas() {
+async function buscarIdeyas(iniciadoPeloUtilizador = true) {
     const orcamento = parseInt(document.getElementById('input-orcamento').value) || 30000;
     const pessoas = parseInt(document.getElementById('input-pessoas').value) || 4;
     const zona = document.getElementById('input-zona').value || null;
@@ -75,7 +79,7 @@ async function buscarIdeyas() {
         if (!resposta.ok) throw new Error('Erro ao buscar locais na API');
 
         const dados = await resposta.json();
-        renderizarLocais(dados.locais, dados.valor_por_pessoa);
+        renderizarLocais(dados.locais, dados.valor_por_pessoa, iniciadoPeloUtilizador);
     } catch (erro) {
         console.error(erro);
         document.getElementById('contador-resultados').innerText = 'Erro ao ligar à API FastAPI. Verifica se o servidor está a correr.';
@@ -83,7 +87,7 @@ async function buscarIdeyas() {
 }
 
 // 5. Renderizar Cartões na Lista e Pins no Mapa
-function renderizarLocais(locais, valorPorPessoa) {
+function renderizarLocais(locais, valorPorPessoa, iniciadoPeloUtilizador = false) {
     const grid = document.getElementById('grid-locais');
     const contador = document.getElementById('contador-resultados');
     grid.innerHTML = '';
@@ -96,6 +100,7 @@ function renderizarLocais(locais, valorPorPessoa) {
                 <p class="font-semibold text-slateDark">Orçamento apertado para esta zona ou categoria 😅</p>
                 <p class="text-sm text-slate-500 mt-1">Tenta aumentar o orçamento total, reduzir o número de pessoas ou limpar os filtros.</p>
             </div>`;
+        if (iniciadoPeloUtilizador) tocarSomOrcamentoApertado();
         return;
     }
 
@@ -232,6 +237,52 @@ function fecharModalIA() {
     const modal = document.getElementById('modal-ia');
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+}
+
+function prepararAudioOrcamento() {
+    const AudioContextCompat = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextCompat) return;
+
+    if (!contextoAudio) contextoAudio = new AudioContextCompat();
+    if (contextoAudio.state === 'suspended') contextoAudio.resume();
+}
+
+function tocarSomOrcamentoApertado() {
+    prepararAudioOrcamento();
+    if (!contextoAudio) return;
+
+    const inicio = contextoAudio.currentTime;
+    const ganho = contextoAudio.createGain();
+    const filtro = contextoAudio.createBiquadFilter();
+    const osciladorPrincipal = contextoAudio.createOscillator();
+    const osciladorDistorcido = contextoAudio.createOscillator();
+
+    osciladorPrincipal.type = 'sawtooth';
+    osciladorDistorcido.type = 'square';
+    osciladorPrincipal.frequency.setValueAtTime(72, inicio);
+    osciladorPrincipal.frequency.exponentialRampToValueAtTime(48, inicio + 1.05);
+    osciladorDistorcido.frequency.setValueAtTime(36, inicio);
+    osciladorDistorcido.frequency.exponentialRampToValueAtTime(24, inicio + 1.05);
+
+    filtro.type = 'lowpass';
+    filtro.frequency.setValueAtTime(420, inicio);
+    filtro.frequency.exponentialRampToValueAtTime(180, inicio + 1.05);
+    filtro.Q.value = 7;
+
+    ganho.gain.setValueAtTime(0.0001, inicio);
+    ganho.gain.exponentialRampToValueAtTime(0.16, inicio + 0.06);
+    ganho.gain.setValueAtTime(0.16, inicio + 0.45);
+    ganho.gain.exponentialRampToValueAtTime(0.0001, inicio + 1.05);
+
+    osciladorPrincipal.connect(filtro);
+    osciladorDistorcido.connect(filtro);
+    filtro.connect(ganho);
+    ganho.connect(contextoAudio.destination);
+
+    osciladorPrincipal.start(inicio);
+    osciladorDistorcido.start(inicio);
+    osciladorPrincipal.stop(inicio + 1.08);
+    osciladorDistorcido.stop(inicio + 1.08);
 }
 
 // Alternar Lista/Mapa no Telemóvel
