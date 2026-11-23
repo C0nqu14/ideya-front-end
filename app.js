@@ -18,8 +18,9 @@ function inicializarMapa() {
     map = L.map('map', { zoomControl: false }).setView([-8.8147, 13.2302], 13);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    // Estilo visual limpo (CartoDB Positron)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}{r}.png', {
+    // Estilo visual limpo (CARTO)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
         attribution: '&copy; OpenStreetMap &copy; CARTO',
         maxZoom: 19
     }).addTo(map);
