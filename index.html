@@ -260,19 +260,21 @@ tailwind.config = { theme: { extend: {
   }
 
   var grid = $('grid-locais');
+  var cartaoLocalSelector = '#grid-locais > article';
   grid.addEventListener('click', function(e){
     if (e.target.closest('a,button')) return;            // não interferir com links/botões do cartão
-    var card = e.target.closest('#grid-locais > *');
+    var card = e.target.closest(cartaoLocalSelector);
     if (card) window.abrirModalLocal(dadosDoCartao(card));
   });
   grid.addEventListener('keydown', function(e){
     if (e.key !== 'Enter' && e.key !== ' ') return;
-    var card = e.target.closest('#grid-locais > *');
+    var card = e.target.closest(cartaoLocalSelector);
     if (card && card === e.target) { e.preventDefault(); window.abrirModalLocal(dadosDoCartao(card)); }
   });
   // torna os cartões (injetados pelo app.js) clicáveis e acessíveis
   new MutationObserver(function(){
     Array.prototype.forEach.call(grid.children, function(c){
+      if (c.tagName !== 'ARTICLE') return;
       if (c.hasAttribute('data-card-clicavel')) return;
       c.setAttribute('data-card-clicavel',''); c.setAttribute('tabindex','0'); c.setAttribute('role','button');
     });
