@@ -4,7 +4,8 @@ let categoriaAtual = null;
 let map = null;
 let markersLayer = null;
 let mapaVisivelMobile = false;
-let contextoAudio = null;
+const somOrcamentoApertado = new Audio('assets/audio/faaah.mp3');
+somOrcamentoApertado.preload = 'auto';
 
 // Inicializar Ícones e Mapa ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,9 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarMapa();
     atualizarCalculoLocal();
     buscarIdeyas(false);
-
-    document.addEventListener('pointerdown', prepararAudioOrcamento, { once: true });
-    document.addEventListener('keydown', prepararAudioOrcamento, { once: true });
 });
 
 // 1. Configurar Mapa Leaflet centrado em Luanda
@@ -239,50 +237,12 @@ function fecharModalIA() {
     modal.classList.remove('flex');
 }
 
-function prepararAudioOrcamento() {
-    const AudioContextCompat = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextCompat) return;
-
-    if (!contextoAudio) contextoAudio = new AudioContextCompat();
-    if (contextoAudio.state === 'suspended') contextoAudio.resume();
-}
-
 function tocarSomOrcamentoApertado() {
-    prepararAudioOrcamento();
-    if (!contextoAudio) return;
-
-    const inicio = contextoAudio.currentTime;
-    const ganho = contextoAudio.createGain();
-    const filtro = contextoAudio.createBiquadFilter();
-    const osciladorPrincipal = contextoAudio.createOscillator();
-    const osciladorDistorcido = contextoAudio.createOscillator();
-
-    osciladorPrincipal.type = 'sawtooth';
-    osciladorDistorcido.type = 'square';
-    osciladorPrincipal.frequency.setValueAtTime(72, inicio);
-    osciladorPrincipal.frequency.exponentialRampToValueAtTime(48, inicio + 1.05);
-    osciladorDistorcido.frequency.setValueAtTime(36, inicio);
-    osciladorDistorcido.frequency.exponentialRampToValueAtTime(24, inicio + 1.05);
-
-    filtro.type = 'lowpass';
-    filtro.frequency.setValueAtTime(420, inicio);
-    filtro.frequency.exponentialRampToValueAtTime(180, inicio + 1.05);
-    filtro.Q.value = 7;
-
-    ganho.gain.setValueAtTime(0.0001, inicio);
-    ganho.gain.exponentialRampToValueAtTime(0.16, inicio + 0.06);
-    ganho.gain.setValueAtTime(0.16, inicio + 0.45);
-    ganho.gain.exponentialRampToValueAtTime(0.0001, inicio + 1.05);
-
-    osciladorPrincipal.connect(filtro);
-    osciladorDistorcido.connect(filtro);
-    filtro.connect(ganho);
-    ganho.connect(contextoAudio.destination);
-
-    osciladorPrincipal.start(inicio);
-    osciladorDistorcido.start(inicio);
-    osciladorPrincipal.stop(inicio + 1.08);
-    osciladorDistorcido.stop(inicio + 1.08);
+    somOrcamentoApertado.currentTime = 0;
+    const reproducao = somOrcamentoApertado.play();
+    if (reproducao) {
+        reproducao.catch(erro => console.error('Não foi possível reproduzir o áudio faaah:', erro));
+    }
 }
 
 // Alternar Lista/Mapa no Telemóvel
