@@ -1,0 +1,53 @@
+/* Personalização dos Pins de Preço no Leaflet */
+.price-pin {
+    background-color: #FFFFFF;
+    color: #0F172A;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 5px 10px;
+    border-radius: 9999px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.price-pin:hover, 
+.price-pin.active {
+    background-color: #0F172A;
+    color: #FFFFFF;
+    transform: scale(1.1);
+    z-index: 1000 !important;
+}
+
+/* Esconder scrollbar no carrossel de categorias */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Ajuste limpo nos popups do Leaflet */
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #0F172A;
+}
+/* Gradiente garantido para o botão Surpreenda-me */
+.btn-surpreenda {
+    background: linear-gradient(135deg, #FF6B4A 0%, #FF8E53 100%);
+    color: #FFFFFF !important;
+}
+
+.btn-surpreenda:hover {
+    opacity: 0.95;
+}
