@@ -18,10 +18,10 @@ function inicializarMapa() {
     map = L.map('map', { zoomControl: false }).setView([-8.8147, 13.2302], 13);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    // Estilo visual limpo (CARTO)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd',
-        attribution: '&copy; OpenStreetMap &copy; CARTO',
+    // Tiles gratuitos, sem chave API
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        subdomains: 'abc',
+        attribution: '&copy; OpenStreetMap &copy; Humanitarian OSM',
         maxZoom: 19
     }).addTo(map);
 
