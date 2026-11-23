@@ -95,7 +95,7 @@ function renderizarLocais(locais, valorPorPessoa, iniciadoPeloUtilizador = false
         contador.innerText = `Nenhum local encontrado até ${formatarKz(valorPorPessoa)} por pessoa.`;
         grid.innerHTML = `
             <div class="col-span-full bg-white rounded-2xl p-8 text-center border border-slate-200">
-                <p class="font-semibold text-slateDark">Orçamento apertado para esta zona ou categoria 😅</p>
+                <p class="font-semibold text-slateDark">Vaquinha bem beca para esta banda ou categoria 😅</p>
                 <p class="text-sm text-slate-500 mt-1">Tenta aumentar o orçamento total, reduzir o número de pessoas ou limpar os filtros.</p>
             </div>`;
         if (iniciadoPeloUtilizador) tocarSomOrcamentoApertado();
